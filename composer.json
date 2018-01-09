@@ -1,0 +1,16 @@
+{
+    "name": "tbollmeier/realworld-webappfound",
+    "description": "Realworld demo app created with my web app foundation framework",
+    "type": "project",
+    "require": {
+        "tbollmeier/webappfound": "v1.0.4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thomas Bollmeier",
+            "email": "developer@tbollmeier.org"
+        }
+    ],
+    "minimum-stability": "alpha"
+}
