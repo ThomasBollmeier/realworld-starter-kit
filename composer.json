@@ -2,6 +2,11 @@
     "name": "tbollmeier/realworld-webappfound",
     "description": "Realworld demo app created with my web app foundation framework",
     "type": "project",
+    "autoload": {
+        "psr-4": {
+            "tbollmeier\\realworld\\": "src"
+        }
+    },
     "require": {
         "tbollmeier/webappfound": "v1.0.4"
     },
