@@ -1,8 +1,7 @@
 <?php
+require_once "../../vendor/autoload.php";
 
 use tbollmeier\realworld\backend\routing\Router;
-
-require_once "../../vendor/autoload.php";
 
 $router = new Router("tbollmeier\\realworld\\backend\\controller");
 
@@ -15,4 +14,3 @@ try {
     http_response_code(500);
     echo $e->getMessage();
 }
-

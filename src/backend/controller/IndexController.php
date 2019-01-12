@@ -9,7 +9,7 @@ class IndexController
     {
         $response = [
           "error" => [
-              "body" => "Endpoint unknown"
+              "body" => "Unknown endpoint"
           ]
         ];
         http_response_code(404);

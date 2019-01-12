@@ -1,0 +1,7 @@
+controller UserController
+    actions
+        signUp <- post /api/users
+    end
+end
+
+default action IndexController#notFound
