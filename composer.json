@@ -8,13 +8,14 @@
         }
     },
     "require": {
-        "tbollmeier/webappfound": "v1.0.4"
+        "tbollmeier/webappfound": "v1.2.3",
+        "ext-json": "*"
     },
     "license": "MIT",
     "authors": [
         {
             "name": "Thomas Bollmeier",
-            "email": "developer@tbollmeier.org"
+            "email": "developer@thomas-bollmeier.de"
         }
     ],
     "minimum-stability": "alpha"

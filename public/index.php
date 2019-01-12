@@ -2,27 +2,13 @@
 
 require_once "../vendor/autoload.php";
 
-use tbollmeier\webappfound\routing\Router;
+use tbollmeier\realworld\backend\routing\RealWorldRouter;
 
 
 $method = $_SERVER['REQUEST_METHOD'];
 $url = explode("=", $_SERVER['QUERY_STRING'])[1];
 
-$router = new Router([
-    'controllerNS' => "tbollmeier\\realworld\\backend\\controller",
-    'baseUrl' => ""
-]);
+echo $url;
 
-$controllers =<<<CONTROLLERS
-
-controller UserController
-    actions
-        signUp <- post /api/users
-    end
-end
-
-CONTROLLERS;
-
-$router->registerActionsFromDSL($controllers);
-
+$router = new RealWorldRouter("tbollmeier\\realworld\\backend\\controller");
 $router->route($method, $url);

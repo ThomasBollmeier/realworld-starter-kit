@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "54d47bcb68f4337c3d82afb2245708f7",
+    "content-hash": "5cb729228000f13de2806b8a17b88b0b",
     "packages": [
         {
             "name": "tbollmeier/parsian",
-            "version": "v1.7.2",
+            "version": "v1.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ThomasBollmeier/parsian.git",
-                "reference": "0fb45fed71ce343b42638d816538c860f97ff97d"
+                "reference": "5b2beaeef0873c2bb73e2ad5e778c5ef55783ec3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ThomasBollmeier/parsian/zipball/0fb45fed71ce343b42638d816538c860f97ff97d",
-                "reference": "0fb45fed71ce343b42638d816538c860f97ff97d",
+                "url": "https://api.github.com/repos/ThomasBollmeier/parsian/zipball/5b2beaeef0873c2bb73e2ad5e778c5ef55783ec3",
+                "reference": "5b2beaeef0873c2bb73e2ad5e778c5ef55783ec3",
                 "shasum": ""
             },
             "require": {
@@ -35,7 +35,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "Apache 2-0"
+                "Apache-2.0"
             ],
             "authors": [
                 {
@@ -44,25 +44,25 @@
                 }
             ],
             "description": "A library to support parser development",
-            "time": "2017-12-02T19:18:06+00:00"
+            "time": "2018-07-19T20:25:53+00:00"
         },
         {
             "name": "tbollmeier/webappfound",
-            "version": "v1.0.4",
+            "version": "v1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ThomasBollmeier/webappfound.git",
-                "reference": "d55c155dd47b1b9ae544b661b6cd300a5a194fc7"
+                "reference": "00c51b75640a8d310c043599c0ca3ef145f995e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ThomasBollmeier/webappfound/zipball/d55c155dd47b1b9ae544b661b6cd300a5a194fc7",
-                "reference": "d55c155dd47b1b9ae544b661b6cd300a5a194fc7",
+                "url": "https://api.github.com/repos/ThomasBollmeier/webappfound/zipball/00c51b75640a8d310c043599c0ca3ef145f995e8",
+                "reference": "00c51b75640a8d310c043599c0ca3ef145f995e8",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0",
-                "tbollmeier/parsian": "v1.7.2"
+                "tbollmeier/parsian": "v1.7.6"
             },
             "require-dev": {
                 "phpunit/phpunit": "5.6.*"
@@ -80,11 +80,12 @@
             "authors": [
                 {
                     "name": "Thomas Bollmeier",
-                    "homepage": "http://tbollmeier.org"
+                    "email": "developer@thomas-bollmeier.de",
+                    "role": "developer"
                 }
             ],
             "description": "Various helper classes for a MVC based webapp",
-            "time": "2018-01-08T17:50:27+00:00"
+            "time": "2019-01-11T13:47:26+00:00"
         }
     ],
     "packages-dev": [],
@@ -93,6 +94,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-json": "*"
+    },
     "platform-dev": []
 }
