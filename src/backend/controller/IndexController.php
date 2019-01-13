@@ -2,18 +2,16 @@
 
 namespace tbollmeier\realworld\backend\controller;
 
+use tbollmeier\realworld\backend\http\Response;
+use tbollmeier\webappfound\controller\BaseController;
 
-class IndexController
+class IndexController extends BaseController
 {
     public function notFound()
     {
-        $response = [
-          "error" => [
-              "body" => "Unknown endpoint"
-          ]
-        ];
-        http_response_code(404);
-        echo json_encode($response);
+        (new Response(404))
+            ->setBody("Unknown endpoint")
+            ->send();
     }
 
 }
