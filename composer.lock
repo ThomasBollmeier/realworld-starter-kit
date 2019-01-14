@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5cb729228000f13de2806b8a17b88b0b",
+    "content-hash": "581c8daad6cd89c1fca4472e608ed35f",
     "packages": [
         {
             "name": "tbollmeier/parsian",
@@ -48,19 +48,20 @@
         },
         {
             "name": "tbollmeier/webappfound",
-            "version": "v1.2.3",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ThomasBollmeier/webappfound.git",
-                "reference": "00c51b75640a8d310c043599c0ca3ef145f995e8"
+                "reference": "bae71b43cf5520c64b56f2a652254068719370b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ThomasBollmeier/webappfound/zipball/00c51b75640a8d310c043599c0ca3ef145f995e8",
-                "reference": "00c51b75640a8d310c043599c0ca3ef145f995e8",
+                "url": "https://api.github.com/repos/ThomasBollmeier/webappfound/zipball/bae71b43cf5520c64b56f2a652254068719370b8",
+                "reference": "bae71b43cf5520c64b56f2a652254068719370b8",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "php": "^7.0",
                 "tbollmeier/parsian": "v1.7.6"
             },
@@ -85,7 +86,7 @@
                 }
             ],
             "description": "Various helper classes for a MVC based webapp",
-            "time": "2019-01-11T13:47:26+00:00"
+            "time": "2019-01-14T21:00:32+00:00"
         }
     ],
     "packages-dev": [],

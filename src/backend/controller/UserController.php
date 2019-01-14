@@ -2,26 +2,19 @@
 
 namespace tbollmeier\realworld\backend\controller;
 
-use tbollmeier\realworld\backend\auth\JsonWebTokenFactory;
 use tbollmeier\realworld\backend\data\UserRes;
 use tbollmeier\realworld\backend\http\Response;
 use tbollmeier\realworld\backend\http\ValidationError;
-use tbollmeier\webappfound\controller\BaseController;
+use tbollmeier\webappfound\auth\JsonWebToken;
+use tbollmeier\webappfound\http\Request;
 
-class UserController extends BaseController
+class UserController
 {
+    private $secretKey = "geheim";
 
-    private $factory;
-
-    public function __construct()
+    public function signUp(Request $req)
     {
-        $this->factory = new JsonWebTokenFactory();
-    }
-
-
-    public function signUp()
-    {
-        $userReg = json_decode($this->getRequestBody());
+        $userReg = json_decode($req->getBody());
 
         if ($userReg === null) {
             $error = new ValidationError();
@@ -36,7 +29,10 @@ class UserController extends BaseController
 
         $userRes = new UserRes(
             $user->email,
-            $this->factory->createToken(),
+            JsonWebToken::encode([
+                "username" => $user->username,
+                "email" => $user->email
+            ], $this->secretKey),
             $user->username,
             "",
             null);

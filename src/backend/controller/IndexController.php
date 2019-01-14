@@ -3,9 +3,8 @@
 namespace tbollmeier\realworld\backend\controller;
 
 use tbollmeier\realworld\backend\http\Response;
-use tbollmeier\webappfound\controller\BaseController;
 
-class IndexController extends BaseController
+class IndexController
 {
     public function notFound()
     {
