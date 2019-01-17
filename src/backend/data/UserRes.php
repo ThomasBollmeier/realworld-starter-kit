@@ -3,9 +3,7 @@
 namespace tbollmeier\realworld\backend\data;
 
 
-use tbollmeier\realworld\backend\http\JsonBody;
-
-class UserRes implements JsonBody
+class UserRes
 {
     private $email;
     private $token;

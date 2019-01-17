@@ -3,7 +3,7 @@
 namespace tbollmeier\realworld\backend\http;
 
 
-class ValidationError implements JsonBody
+class ValidationError
 {
     private $messagesPerField;
 

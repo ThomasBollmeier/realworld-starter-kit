@@ -3,24 +3,24 @@
 namespace tbollmeier\realworld\backend\controller;
 
 use tbollmeier\realworld\backend\data\UserRes;
-use tbollmeier\realworld\backend\http\Response;
 use tbollmeier\realworld\backend\http\ValidationError;
 use tbollmeier\webappfound\auth\JsonWebToken;
 use tbollmeier\webappfound\http\Request;
+use tbollmeier\webappfound\http\Response;
 
 class UserController
 {
     private $secretKey = "geheim";
 
-    public function signUp(Request $req)
+    public function signUp(Request $req, Response $res)
     {
         $userReg = json_decode($req->getBody());
 
         if ($userReg === null) {
             $error = new ValidationError();
             $error->addFieldMessage("user", "invalid user data");
-            (new Response(422))
-                ->setBody($error)
+            $res->setResponseCode(422)
+                ->setBody($error->toJsonString())
                 ->send();
             return;
         }
@@ -37,8 +37,8 @@ class UserController
             "",
             null);
 
-        (new Response(200))
-            ->setBody($userRes)
+        $res->setHeader("Content-Type", "application/json")
+            ->setBody($userRes->toJsonString())
             ->send();
 
     }
