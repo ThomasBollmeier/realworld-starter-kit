@@ -1,6 +1,7 @@
 controller UserController
     actions
         signUp <- post /api/users
+        signIn <- post /api/users/login
     end
 end
 

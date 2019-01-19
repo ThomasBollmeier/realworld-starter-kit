@@ -9,7 +9,8 @@
     },
     "require": {
         "tbollmeier/webappfound": "^v2.2.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "firebase/php-jwt": "^5.0"
     },
     "license": "MIT",
     "authors": [

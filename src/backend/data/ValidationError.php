@@ -1,6 +1,6 @@
 <?php
 
-namespace tbollmeier\realworld\backend\http;
+namespace tbollmeier\realworld\backend\data;
 
 
 class ValidationError
