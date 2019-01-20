@@ -7,6 +7,11 @@ class Validator
 {
     private $requiredFields = [];
 
+    public function __construct($requiredFields)
+    {
+        $this->requiredFields = $requiredFields;
+    }
+
     public function addRequiredField($name)
     {
         $this->requiredFields[] = $name;
@@ -21,7 +26,7 @@ class Validator
         foreach ($this->requiredFields as $requiredField) {
             if (!array_key_exists($requiredField, $data_)) {
                 $errors[$requiredField] = ["Required field '$requiredField' is not given"];
-            }
+            }ire
         }
 
         if (!empty($errors)) {

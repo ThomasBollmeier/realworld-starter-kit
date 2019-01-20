@@ -77,18 +77,17 @@ class UserController
             return [null, $error];
         }
 
-        $validator = new Validator();
-        $validator->addRequiredField("user");
+        $validator = new Validator(["user"]);
         $error = $validator->validate($data);
         if ($error != null) {
             return [null, $error];
         }
 
-        $validator = new Validator();
-        $validator->addRequiredField("username");
-        $validator->addRequiredField("email");
-        $validator->addRequiredField("password");
-
+        $validator = new Validator([
+            "username",
+            "email",
+            "password"
+        ]);
         $error = $validator->validate($data->user);
 
         return $error === null ?
@@ -106,17 +105,16 @@ class UserController
             return [null, $error];
         }
 
-        $validator = new Validator();
-        $validator->addRequiredField("user");
+        $validator = new Validator(["user"]);
         $error = $validator->validate($data)[1];
         if ($error != null) {
             return [null, $error];
         }
 
-        $validator = new Validator();
-        $validator->addRequiredField("email");
-        $validator->addRequiredField("password");
-
+        $validator = new Validator([
+            "email",
+            "password"
+        ]);
         $error = $validator->validate($data->user);
 
         return $error === null ?
