@@ -2,6 +2,15 @@
 require_once "../../vendor/autoload.php";
 
 use tbollmeier\realworld\backend\routing\Router;
+use tbollmeier\realworld\backend\db\Database;
+
+try {
+    Database::get();
+} catch (Exception $e) {
+    http_response_code(500);
+    echo $e->getMessage();
+    return;
+}
 
 $router = new Router("tbollmeier\\realworld\\backend\\controller");
 

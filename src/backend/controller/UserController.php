@@ -6,6 +6,7 @@ use tbollmeier\realworld\backend\auth\JsonWebToken;
 use tbollmeier\realworld\backend\data\UserRes;
 use tbollmeier\realworld\backend\data\ValidationError;
 use tbollmeier\realworld\backend\data\Validator;
+use tbollmeier\realworld\backend\model\User;
 use tbollmeier\webappfound\http\Request;
 use tbollmeier\webappfound\http\Response;
 
@@ -20,9 +21,17 @@ class UserController
             return;
         }
 
-        // TODO:
-        // 1. Check for duplicates
-        // 2. Persist user data
+        if (User::findByEmail($userSignUp->email) !== null) {
+            $emailExistsError = json_encode([
+                "error" => [
+                    "email" => "A user with email address $userSignUp->email exists already"
+                    ]
+            ]);
+            $this->respondJSON($res, $emailExistsError, 422);
+            return;
+        }
+
+        $this->saveNewUser($userSignUp);
 
         $userRes = new UserRes(
             $userSignUp->email,
@@ -46,23 +55,27 @@ class UserController
             return;
         }
 
-        // TODO:
-        // 1. Lookup user
+        $user = User::findByEmail($userSignIn->email);
+        if ($user === null || !password_verify($userSignIn->password, $user->passwordHash)) {
+            $emailOrPasswordError = json_encode([
+                "error" => [
+                    "email" => "Invalid user email or password"
+                ]
+            ]);
+            $this->respondJSON($res, $emailOrPasswordError, 422);
+            return;
 
-        $user = new \stdClass();
-        $user->username = "";
-        $user->email = $userSignIn->email;
-        $user->password = $userSignIn->password;
+        }
 
         $userRes = new UserRes(
             $user->email,
             JsonWebToken::encode([
-                "username" => $user->username,
+                "username" => $user->name,
                 "email" => $user->email
             ]),
-            $user->username,
-            "",
-            null);
+            $user->name,
+            $user->bio,
+            $user->imageUrl);
 
         $this->respondJSON($res, $userRes->toJsonString());
     }
@@ -128,6 +141,18 @@ class UserController
             ->setResponseCode($responseCode)
             ->setBody($body)
             ->send();
+    }
+
+    private function saveNewUser($userData)
+    {
+        $user = new User();
+        $user->email = $userData->email;
+        $user->name = $userData->username;
+        $user->passwordHash = password_hash($userData->password, PASSWORD_DEFAULT);
+        $user->bio = "";
+        $user->imageUrl = "";
+
+        $user->save();
     }
 
 }
