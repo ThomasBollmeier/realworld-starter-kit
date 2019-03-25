@@ -2,7 +2,6 @@
 
 namespace tbollmeier\realworld\backend\controller;
 
-use tbollmeier\realworld\backend\auth\JsonWebToken;
 use tbollmeier\realworld\backend\data\UserRes;
 use tbollmeier\realworld\backend\data\ValidationError;
 use tbollmeier\realworld\backend\data\Validator;
@@ -12,6 +11,8 @@ use tbollmeier\webappfound\http\Response;
 
 class UserController
 {
+    use ControllerUtils;
+
     public function signUp(Request $req, Response $res)
     {
         list($userSignUp, $error) = $this->validateSignUpRequest($req);
@@ -22,11 +23,8 @@ class UserController
         }
 
         if (User::findByEmail($userSignUp->email) !== null) {
-            $emailExistsError = json_encode([
-                "error" => [
-                    "email" => "A user with email address $userSignUp->email exists already"
-                    ]
-            ]);
+            $emailExistsError = $this->makeError("email",
+                "A user with email address $userSignUp->email exists already");
             $this->respondJSON($res, $emailExistsError, 422);
             return;
         }
@@ -35,10 +33,7 @@ class UserController
 
         $userRes = new UserRes(
             $userSignUp->email,
-            JsonWebToken::encode([
-                "username" => $userSignUp->username,
-                "email" => $userSignUp->email
-            ]),
+            $this->makeAuthToken($userSignUp->username, $userSignUp->email),
             $userSignUp->username,
             "",
             null);
@@ -57,27 +52,46 @@ class UserController
 
         $user = User::findByEmail($userSignIn->email);
         if ($user === null || !password_verify($userSignIn->password, $user->passwordHash)) {
-            $emailOrPasswordError = json_encode([
-                "error" => [
-                    "email" => "Invalid user email or password"
-                ]
-            ]);
+            $emailOrPasswordError = $this->makeError("email",
+                "Invalid user email or password");
             $this->respondJSON($res, $emailOrPasswordError, 422);
             return;
-
         }
 
         $userRes = new UserRes(
             $user->email,
-            JsonWebToken::encode([
-                "username" => $user->name,
-                "email" => $user->email
-            ]),
+            $this->makeAuthToken($user->name, $user->email),
             $user->name,
             $user->bio,
             $user->imageUrl);
 
         $this->respondJSON($res, $userRes->toJsonString());
+    }
+
+    public function getCurrent(Request $req, Response $res)
+    {
+        list($ok, $name, $email) = $this->checkAuthToken($req);
+
+        if (!$ok) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+
+        $user = User::findByEmail($email);
+        if ($user === null || $user->name != $name) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+
+        $userRes = new UserRes(
+            $user->email,
+            $this->makeAuthToken($user->name, $user->email),
+            $user->name,
+            $user->bio,
+            $user->imageUrl);
+
+        $this->respondJSON($res, $userRes->toJsonString());
+
     }
 
     private function validateSignUpRequest(Request $req)
@@ -135,14 +149,6 @@ class UserController
             [null, $error];
     }
 
-    private function respondJSON(Response $res, $body, $responseCode=200)
-    {
-        $res->setHeader("Content-Type", "application/json; charset=utf-8")
-            ->setResponseCode($responseCode)
-            ->setBody($body)
-            ->send();
-    }
-
     private function saveNewUser($userData)
     {
         $user = new User();
@@ -150,7 +156,7 @@ class UserController
         $user->name = $userData->username;
         $user->passwordHash = password_hash($userData->password, PASSWORD_DEFAULT);
         $user->bio = "";
-        $user->imageUrl = "";
+        $user->imageUrl = null;
 
         $user->save();
     }
