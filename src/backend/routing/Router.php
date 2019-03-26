@@ -49,6 +49,13 @@ class Router extends BaseRouter{
         $action->paramNames = [];
         $controller->actions[] = $action;
     
+        $action = new ActionData();
+        $action->name = "update";
+        $action->httpMethod = "PUT";
+        $action->pattern = "api\/user";
+        $action->paramNames = [];
+        $controller->actions[] = $action;
+    
         $routerData->controllers[] = $controller;
 
         $this->setUpHandlers($routerData);

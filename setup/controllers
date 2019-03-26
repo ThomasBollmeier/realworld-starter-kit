@@ -3,6 +3,7 @@ controller UserController
         signUp <- post /api/users
         signIn <- post /api/users/login
         getCurrent <- get /api/user
+        update <- put /api/user
     end
 end
 

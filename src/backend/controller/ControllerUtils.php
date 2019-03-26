@@ -3,6 +3,7 @@
 namespace tbollmeier\realworld\backend\controller;
 
 use tbollmeier\realworld\backend\auth\JsonWebToken;
+use tbollmeier\realworld\backend\model\User;
 use tbollmeier\webappfound\http\Request;
 use tbollmeier\webappfound\http\Response;
 
@@ -52,6 +53,17 @@ trait ControllerUtils
 
         return [true, $userData->username, $userData->email];
 
+    }
+
+    private function getUserFromAuthToken(Request $req)
+    {
+        list($ok, $name, $email) = $this->checkAuthToken($req);
+        if (!$ok) return null;
+
+        $user = User::findByEmail($email);
+        return ($user !== null && $user->name == $name) ?
+            $user :
+            null;
     }
 
 }

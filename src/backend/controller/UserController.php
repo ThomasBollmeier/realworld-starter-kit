@@ -70,18 +70,55 @@ class UserController
 
     public function getCurrent(Request $req, Response $res)
     {
-        list($ok, $name, $email) = $this->checkAuthToken($req);
-
-        if (!$ok) {
+        $user = $this->getUserFromAuthToken($req);
+        if ($user === null) {
             $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
             return;
         }
 
-        $user = User::findByEmail($email);
-        if ($user === null || $user->name != $name) {
+        $userRes = new UserRes(
+            $user->email,
+            $this->makeAuthToken($user->name, $user->email),
+            $user->name,
+            $user->bio,
+            $user->imageUrl);
+
+        $this->respondJSON($res, $userRes->toJsonString());
+
+    }
+
+    public function update(Request $req, Response $res)
+    {
+        $user = $this->getUserFromAuthToken($req);
+        if ($user === null) {
             $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
             return;
         }
+
+        $assoc = true;
+        $userData = json_decode($req->getBody(), $assoc)["user"];
+
+        foreach ($userData as $key => $value) {
+            switch ($key) {
+                case "email":
+                    $user->email = $value;
+                    break;
+                case "username":
+                    $user->name = $value;
+                    break;
+                case "password":
+                    $user->passwordHash = password_hash($value, PASSWORD_DEFAULT);;
+                    break;
+                case "image":
+                    $user->imageUrl = $value;
+                    break;
+                case "bio":
+                    $user->bio = $value;
+                    break;
+            }
+        }
+
+        $user->save();
 
         $userRes = new UserRes(
             $user->email,
