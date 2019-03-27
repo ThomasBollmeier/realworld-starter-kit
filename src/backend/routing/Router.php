@@ -58,6 +58,18 @@ class Router extends BaseRouter{
     
         $routerData->controllers[] = $controller;
 
+        $controller = new ControllerData();
+        $controller->name = "ProfileController";
+    
+        $action = new ActionData();
+        $action->name = "getProfile";
+        $action->httpMethod = "GET";
+        $action->pattern = "api\/profiles\/([^\/]+)";
+        $action->paramNames = ["username"];
+        $controller->actions[] = $action;
+    
+        $routerData->controllers[] = $controller;
+
         $this->setUpHandlers($routerData);
     }
 }

@@ -7,4 +7,10 @@ controller UserController
     end
 end
 
+controller ProfileController
+    actions
+        getProfile <- get /api/profiles/<username>
+    end
+end
+
 default action IndexController#notFound
