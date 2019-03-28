@@ -24,11 +24,17 @@ class ProfileController
 
             $user = $users[0];
 
+            $currentUser = $this->getUserFromAuthToken($req);
+
+            $following = $currentUser != null ?
+                $this->follows($currentUser, $user) :
+                false;
+
             $profile = new ProfileRes(
                 $user->name,
                 $user->bio,
                 $user->imageUrl,
-                false
+                $following
             );
 
             $this->respondJSON($res, $profile->toJsonString());
@@ -40,6 +46,61 @@ class ProfileController
 
         }
 
+    }
+
+    public function follow(Request $req, Response $res)
+    {
+        $currentUser = $this->getUserFromAuthToken($req);
+        if ($currentUser === null) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+
+        $userName = $req->getUrlParams()["username"];
+
+        $users = User::query([
+            "filter" => "name = :username",
+            "params" => [":username" => $userName]
+        ]);
+
+        if (count($users) === 1) {
+
+            $user = $users[0];
+
+            if (!$this->follows($currentUser, $user)) {
+                $following = $currentUser->following;
+                $following[] = $user;
+                $currentUser->following = $following;
+                $currentUser->save();
+            }
+
+            $profile = new ProfileRes(
+                $user->name,
+                $user->bio,
+                $user->imageUrl,
+                true
+            );
+
+            $this->respondJSON($res, $profile->toJsonString());
+
+        } else {
+
+            $this->respondJSON($res,
+                $this->makeError("username", "not found"), 404);
+
+        }
+
+    }
+
+    private function follows(User $follower, User $followed)
+    {
+        foreach($follower->following as $user) {
+            if ($user->getId() === $followed->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

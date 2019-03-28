@@ -68,6 +68,13 @@ class Router extends BaseRouter{
         $action->paramNames = ["username"];
         $controller->actions[] = $action;
     
+        $action = new ActionData();
+        $action->name = "follow";
+        $action->httpMethod = "POST";
+        $action->pattern = "api\/profiles\/([^\/]+)\/follow";
+        $action->paramNames = ["username"];
+        $controller->actions[] = $action;
+    
         $routerData->controllers[] = $controller;
 
         $this->setUpHandlers($routerData);

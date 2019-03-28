@@ -26,6 +26,24 @@ class User extends ActiveRecord
         $this->defineField("passwordHash", ["dbAlias" => "password_hash"]);
         $this->defineField("bio");
         $this->defineField("imageUrl", ["dbAlias" => "image_url"]);
+
+        $this->defineAssoc("followers",
+            User::class,
+            true,
+            [
+                "linkTable" => "followers",
+                "sourceIdField" => "followed_id",
+                "targetIdField" => "follower_id"
+            ]);
+
+        $this->defineAssoc("following",
+            User::class,
+            true,
+            [
+                "linkTable" => "followers",
+                "sourceIdField" => "follower_id",
+                "targetIdField" => "followed_id"
+            ]);
     }
 
 }
