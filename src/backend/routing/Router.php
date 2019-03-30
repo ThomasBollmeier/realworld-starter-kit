@@ -75,6 +75,13 @@ class Router extends BaseRouter{
         $action->paramNames = ["username"];
         $controller->actions[] = $action;
     
+        $action = new ActionData();
+        $action->name = "unfollow";
+        $action->httpMethod = "DELETE";
+        $action->pattern = "api\/profiles\/([^\/]+)\/follow";
+        $action->paramNames = ["username"];
+        $controller->actions[] = $action;
+    
         $routerData->controllers[] = $controller;
 
         $this->setUpHandlers($routerData);

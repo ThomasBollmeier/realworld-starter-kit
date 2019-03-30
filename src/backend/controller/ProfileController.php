@@ -92,6 +92,49 @@ class ProfileController
 
     }
 
+    public function unfollow(Request $req, Response $res)
+    {
+        $currentUser = $this->getUserFromAuthToken($req);
+        if ($currentUser === null) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+
+        $userName = $req->getUrlParams()["username"];
+
+        $users = User::query([
+            "filter" => "name = :username",
+            "params" => [":username" => $userName]
+        ]);
+
+        if (count($users) === 1) {
+
+            $user = $users[0];
+
+            $newFollowing = array_filter($currentUser->following, function ($u) use ($user) {
+                return $u->getId() != $user->getId();
+            });
+            $currentUser->following = $newFollowing;
+            $currentUser->save();
+
+            $profile = new ProfileRes(
+                $user->name,
+                $user->bio,
+                $user->imageUrl,
+                false
+            );
+
+            $this->respondJSON($res, $profile->toJsonString());
+
+        } else {
+
+            $this->respondJSON($res,
+                $this->makeError("username", "not found"), 404);
+
+        }
+
+    }
+
     private function follows(User $follower, User $followed)
     {
         foreach($follower->following as $user) {

@@ -11,6 +11,7 @@ controller ProfileController
     actions
         getProfile <- get /api/profiles/<username>
         follow <- post /api/profiles/<username>/follow
+        unfollow <- delete /api/profiles/<username>/follow
     end
 end
 

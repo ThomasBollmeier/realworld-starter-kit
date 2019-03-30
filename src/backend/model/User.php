@@ -29,16 +29,17 @@ class User extends ActiveRecord
 
         $this->defineAssoc("followers",
             User::class,
-            true,
+            false,
             [
                 "linkTable" => "followers",
                 "sourceIdField" => "followed_id",
-                "targetIdField" => "follower_id"
+                "targetIdField" => "follower_id",
+                "readOnly" => true
             ]);
 
         $this->defineAssoc("following",
             User::class,
-            true,
+            false,
             [
                 "linkTable" => "followers",
                 "sourceIdField" => "follower_id",

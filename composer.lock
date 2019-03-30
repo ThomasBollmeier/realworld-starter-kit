@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0fe4fbabf7da69607d22f5a20b20b992",
+    "content-hash": "1894e7a8b3cf71457f5b8b7329b2c576",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -94,16 +94,16 @@
         },
         {
             "name": "tbollmeier/webappfound",
-            "version": "v2.2.1",
+            "version": "v2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ThomasBollmeier/webappfound.git",
-                "reference": "61d02ab9e734588933ab0a7ae91cfd010155f2a3"
+                "reference": "7b6a79398b5db05f103e90a67d850287889dd193"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ThomasBollmeier/webappfound/zipball/61d02ab9e734588933ab0a7ae91cfd010155f2a3",
-                "reference": "61d02ab9e734588933ab0a7ae91cfd010155f2a3",
+                "url": "https://api.github.com/repos/ThomasBollmeier/webappfound/zipball/7b6a79398b5db05f103e90a67d850287889dd193",
+                "reference": "7b6a79398b5db05f103e90a67d850287889dd193",
                 "shasum": ""
             },
             "require": {
@@ -132,7 +132,7 @@
                 }
             ],
             "description": "Various helper classes for a MVC based webapp",
-            "time": "2019-03-24T12:30:31+00:00"
+            "time": "2019-03-29T11:58:52+00:00"
         }
     ],
     "packages-dev": [],
