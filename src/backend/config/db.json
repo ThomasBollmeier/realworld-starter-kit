@@ -1,8 +1,8 @@
 {
   "host": "localhost",
-  "port": 8889,
-  "unix_socket": "/Applications/MAMP/tmp/mysql/mysql.sock",
+  "port": 3306,
+  "unix_socket": "",
   "dbname": "realworld",
-  "user": "root",
-  "password": "root"
+  "user": "realworld",
+  "password": "rE@lwelt!"
 }
