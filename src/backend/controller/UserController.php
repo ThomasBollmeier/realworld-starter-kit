@@ -5,7 +5,7 @@ namespace tbollmeier\realworld\backend\controller;
 use tbollmeier\realworld\backend\data\UserRes;
 use tbollmeier\realworld\backend\data\ValidationError;
 use tbollmeier\realworld\backend\data\Validator;
-use tbollmeier\realworld\backend\model\User;
+use tbollmeier\realworld\backend\model\Model;
 use tbollmeier\webappfound\http\Request;
 use tbollmeier\webappfound\http\Response;
 
@@ -22,7 +22,7 @@ class UserController
             return;
         }
 
-        if (User::findByEmail($userSignUp->email) !== null) {
+        if (Model::getUserDef()->findByEmail($userSignUp->email) !== null) {
             $emailExistsError = $this->makeError("email",
                 "A user with email address $userSignUp->email exists already");
             $this->respondJSON($res, $emailExistsError, 422);
@@ -50,7 +50,7 @@ class UserController
             return;
         }
 
-        $user = User::findByEmail($userSignIn->email);
+        $user = Model::getUserDef()->findByEmail($userSignIn->email);
         if ($user === null || !password_verify($userSignIn->password, $user->passwordHash)) {
             $emailOrPasswordError = $this->makeError("email",
                 "Invalid user email or password");
@@ -107,7 +107,7 @@ class UserController
                     $user->name = $value;
                     break;
                 case "password":
-                    $user->passwordHash = password_hash($value, PASSWORD_DEFAULT);;
+                    $user->passwordHash = password_hash($value, PASSWORD_DEFAULT);
                     break;
                 case "image":
                     $user->imageUrl = $value;
@@ -188,7 +188,7 @@ class UserController
 
     private function saveNewUser($userData)
     {
-        $user = new User();
+        $user = Model::getUserDef()->createEntity();
         $user->email = $userData->email;
         $user->name = $userData->username;
         $user->passwordHash = password_hash($userData->password, PASSWORD_DEFAULT);

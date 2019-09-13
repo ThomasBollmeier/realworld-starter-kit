@@ -5,7 +5,8 @@ namespace tbollmeier\realworld\backend\controller;
 use tbollmeier\realworld\backend\data\ProfileRes;
 use tbollmeier\webappfound\http\Request;
 use tbollmeier\webappfound\http\Response;
-use tbollmeier\realworld\backend\model\User;
+use tbollmeier\realworld\backend\model\Model;
+use tbollmeier\webappfound\db\Entity;
 
 class ProfileController
 {
@@ -15,7 +16,7 @@ class ProfileController
     {
         $userName = $req->getUrlParams()["username"];
 
-        $users = User::query([
+        $users = Model::getUserDef()->query([
             "filter" => "name = :username",
             "params" => [":username" => $userName]
         ]);
@@ -58,7 +59,7 @@ class ProfileController
 
         $userName = $req->getUrlParams()["username"];
 
-        $users = User::query([
+        $users = Model::getUserDef()->query([
             "filter" => "name = :username",
             "params" => [":username" => $userName]
         ]);
@@ -102,7 +103,7 @@ class ProfileController
 
         $userName = $req->getUrlParams()["username"];
 
-        $users = User::query([
+        $users = Model::getUserDef()->query([
             "filter" => "name = :username",
             "params" => [":username" => $userName]
         ]);
@@ -135,7 +136,7 @@ class ProfileController
 
     }
 
-    private function follows(User $follower, User $followed)
+    private function follows(Entity $follower, Entity $followed)
     {
         foreach($follower->following as $user) {
             if ($user->getId() === $followed->getId()) {

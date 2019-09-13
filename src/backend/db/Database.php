@@ -3,43 +3,23 @@
 namespace tbollmeier\realworld\backend\db;
 
 use tbollmeier\webappfound\db\Connector;
-use tbollmeier\webappfound\db\ActiveRecord;
-
+use tbollmeier\webappfound\db\Environment;
 
 class Database
 {
-    private static $single = null;
-
-    private $conn; // PDO connection to database
-
     /**
+     * Establish database connection
+     * 
      * @throws \Exception
      */
-    public static function get()
-    {
-        if (self::$single === null) {
-            self::$single = new Database();
-        }
-    }
-
-    public function getConnection()
-    {
-        return $this->conn;
-    }
-
-    /**
-     * Database constructor.
-     * @throws \Exception
-     */
-    private function __construct()
+    public static function connect() 
     {
         $connector = new Connector();
-        $this->conn = $connector->createConfigConnection(__DIR__ . "/../config/db.json");
-        if ($this->conn === false) {
+        $dbConn = $connector->createConfigConnection(__DIR__ . "/../config/db.json");
+        if ($dbConn === false) {
             throw new \Exception("Could not establish connection to database");
         }
-
-        ActiveRecord::setDbConnection($this->conn);
-
+        
+        Environment::getInstance()->dbConn = $dbConn;
     }
 }

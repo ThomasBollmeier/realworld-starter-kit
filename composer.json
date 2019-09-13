@@ -8,7 +8,7 @@
 		}
 	},
 	"require" : {
-		"tbollmeier/webappfound" : "^v2.2.8",
+		"tbollmeier/webappfound" : "~2.4.2",
 		"ext-json" : "*",
 		"firebase/php-jwt" : "^5.0"
 	},

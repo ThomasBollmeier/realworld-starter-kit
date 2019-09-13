@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a517dd65705e6bed37a7b1c7ff317bed",
+    "content-hash": "e5f1a7db3a13814f664ccc0a03119a0b",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -94,16 +94,16 @@
         },
         {
             "name": "tbollmeier/webappfound",
-            "version": "v2.2.8",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ThomasBollmeier/webappfound.git",
-                "reference": "6319354d82b21f821fd34a7335fa8e06d57e66c5"
+                "reference": "c756464e908211be95afb1ed89c3e327864a4275"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ThomasBollmeier/webappfound/zipball/6319354d82b21f821fd34a7335fa8e06d57e66c5",
-                "reference": "6319354d82b21f821fd34a7335fa8e06d57e66c5",
+                "url": "https://api.github.com/repos/ThomasBollmeier/webappfound/zipball/c756464e908211be95afb1ed89c3e327864a4275",
+                "reference": "c756464e908211be95afb1ed89c3e327864a4275",
                 "shasum": ""
             },
             "require": {
@@ -127,12 +127,12 @@
             "authors": [
                 {
                     "name": "Thomas Bollmeier",
-                    "role": "developer",
-                    "email": "developer@thomas-bollmeier.de"
+                    "email": "developer@thomas-bollmeier.de",
+                    "role": "developer"
                 }
             ],
             "description": "Various helper classes for a MVC based webapp",
-            "time": "2019-08-18T21:10:26+00:00"
+            "time": "2019-09-11T07:29:30+00:00"
         }
     ],
     "packages-dev": [],
