@@ -1,10 +1,17 @@
 <?php
 namespace tbollmeier\realworld\backend\model;
 
+use tbollmeier\webappfound\db\Entity;
 use tbollmeier\webappfound\db\EntityDefinition;
 
 class UserDef extends EntityDefinition
 {
+
+    public function createEntity($id = Entity::INDEX_NOT_IN_DB)
+    {
+        return new User($this, $id);
+    }
+
     public function __construct()
     {
         parent::__construct("users");

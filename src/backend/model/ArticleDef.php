@@ -2,9 +2,15 @@
 namespace tbollmeier\realworld\backend\model;
 
 use tbollmeier\webappfound\db\EntityDefinition;
+use tbollmeier\webappfound\db\Entity;
 
 class ArticleDef extends EntityDefinition
 {
+    public function createEntity($id = Entity::INDEX_NOT_IN_DB) 
+    {
+        return new Article($this, $id);
+    }
+    
     public function __construct()
     {
         parent::__construct("articles");
@@ -25,8 +31,13 @@ class ArticleDef extends EntityDefinition
                 ->setSourceIdField("article_id")
                 ->setTargetIdField("tag_id")
                 ->add()
-            ->newAssociation("author", UserDef::class)
-                ->setLinkTable("articles_users")
+            ->newAssociation("authors", UserDef::class)
+                ->setLinkTable("authors")
+                ->setSourceIdField("article_id")
+                ->setTargetIdField("user_id")
+                ->add()
+            ->newAssociation("favorites", UserDef::class)
+                ->setLinkTable("favorites")
                 ->setSourceIdField("article_id")
                 ->setTargetIdField("user_id")
                 ->add();

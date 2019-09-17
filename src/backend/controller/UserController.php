@@ -193,7 +193,7 @@ class UserController
         $user->name = $userData->username;
         $user->passwordHash = password_hash($userData->password, PASSWORD_DEFAULT);
         $user->bio = "";
-        $user->imageUrl = null;
+        $user->imageUrl = "";
 
         $user->save();
     }

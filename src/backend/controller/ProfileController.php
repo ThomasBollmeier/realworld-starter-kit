@@ -6,7 +6,6 @@ use tbollmeier\realworld\backend\data\ProfileRes;
 use tbollmeier\webappfound\http\Request;
 use tbollmeier\webappfound\http\Response;
 use tbollmeier\realworld\backend\model\Model;
-use tbollmeier\webappfound\db\Entity;
 
 class ProfileController
 {
@@ -28,7 +27,7 @@ class ProfileController
             $currentUser = $this->getUserFromAuthToken($req);
 
             $following = $currentUser != null ?
-                $this->follows($currentUser, $user) :
+                $currentUser->isFollowing($user) :
                 false;
 
             $profile = new ProfileRes(
@@ -68,10 +67,8 @@ class ProfileController
 
             $user = $users[0];
 
-            if (!$this->follows($currentUser, $user)) {
-                $following = $currentUser->following;
-                $following[] = $user;
-                $currentUser->following = $following;
+            if (!$currentUser->isFollowing($user)) {
+                $currentUser->follow($user);
                 $currentUser->save();
             }
 
@@ -109,13 +106,10 @@ class ProfileController
         ]);
 
         if (count($users) === 1) {
-
+            
             $user = $users[0];
 
-            $newFollowing = array_filter($currentUser->following, function ($u) use ($user) {
-                return $u->getId() != $user->getId();
-            });
-            $currentUser->following = $newFollowing;
+            $currentUser->unfollow($user);
             $currentUser->save();
 
             $profile = new ProfileRes(
@@ -134,17 +128,6 @@ class ProfileController
 
         }
 
-    }
-
-    private function follows(Entity $follower, Entity $followed)
-    {
-        foreach($follower->following as $user) {
-            if ($user->getId() === $followed->getId()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 }
