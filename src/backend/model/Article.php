@@ -12,13 +12,7 @@ class Article extends Entity
     
     public function isFavoriteOf(User $user)
     {
-        foreach ($this->favorites as $favUser) {
-            if ($favUser->getId() == $user->getId()) {
-                return true;
-            }
-        }
-        
-        return false;
+        return $this->isAssociated("favorites", $user);
     }
     
     public function addToFavoritesOf(User $user) 

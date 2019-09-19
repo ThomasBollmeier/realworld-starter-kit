@@ -3,12 +3,32 @@ namespace tbollmeier\realworld\backend\model;
 
 use tbollmeier\webappfound\db\EntityDefinition;
 use tbollmeier\webappfound\db\Entity;
+use Cocur\Slugify\Slugify;
 
 class ArticleDef extends EntityDefinition
 {
     public function createEntity($id = Entity::INDEX_NOT_IN_DB) 
     {
         return new Article($this, $id);
+    }
+    
+    public function createArticle(
+        User $author, 
+        string $title, 
+        string $description,
+        string $body,
+        $tagList = [])
+    {
+        $article = new Article();
+   
+        $article->slug = (new Slugify())->slugify($title);
+        $article->title = $title;
+        $article->description = $description;
+        $article->body = $body;
+        
+        $article->setAuthor($author);
+        
+        return $article;
     }
     
     public function __construct()

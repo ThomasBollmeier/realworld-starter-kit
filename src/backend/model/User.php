@@ -7,13 +7,7 @@ class User extends Entity
 {
     public function isFollowing(User $other)
     {
-        foreach ($this->following as $followed) {
-            if ($followed->getId() === $other->getId()) {
-                return true;
-            }
-        }
-        
-        return false;
+        return $this->isAssociated("following", $other);
     }
     
     public function follow(User $other) 

@@ -84,6 +84,18 @@ class Router extends BaseRouter{
     
         $routerData->controllers[] = $controller;
 
+        $controller = new ControllerData();
+        $controller->name = "ArticleController";
+    
+        $action = new ActionData();
+        $action->name = "create";
+        $action->httpMethod = "POST";
+        $action->pattern = "api\/articles";
+        $action->paramNames = [];
+        $controller->actions[] = $action;
+    
+        $routerData->controllers[] = $controller;
+
         $this->setUpHandlers($routerData);
     }
 }

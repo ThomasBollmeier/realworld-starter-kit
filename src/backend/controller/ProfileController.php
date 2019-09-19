@@ -109,8 +109,10 @@ class ProfileController
             
             $user = $users[0];
 
-            $currentUser->unfollow($user);
-            $currentUser->save();
+            if ($currentUser->isFollowing($user)) {
+                $currentUser->unfollow($user);
+                $currentUser->save();
+            }
 
             $profile = new ProfileRes(
                 $user->name,

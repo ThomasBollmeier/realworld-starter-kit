@@ -15,4 +15,10 @@ controller ProfileController
     end
 end
 
+controller ArticleController
+	actions 
+		create <- post /api/articles
+	end
+end
+
 default action IndexController#notFound

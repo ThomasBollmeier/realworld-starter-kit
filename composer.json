@@ -8,9 +8,10 @@
 		}
 	},
 	"require" : {
-		"tbollmeier/webappfound" : "~2.4.3",
+		"tbollmeier/webappfound" : "2.4.4",
 		"ext-json" : "*",
-		"firebase/php-jwt" : "^5.0"
+		"firebase/php-jwt" : "^5.0",
+		"cocur/slugify" : "~3.2"
 	},
 	"license" : "MIT",
 	"authors" : [{
