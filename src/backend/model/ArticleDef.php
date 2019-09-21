@@ -3,7 +3,7 @@ namespace tbollmeier\realworld\backend\model;
 
 use tbollmeier\webappfound\db\EntityDefinition;
 use tbollmeier\webappfound\db\Entity;
-use Cocur\Slugify\Slugify;
+
 
 class ArticleDef extends EntityDefinition
 {
@@ -19,12 +19,13 @@ class ArticleDef extends EntityDefinition
         string $body,
         $tagList = [])
     {
-        $article = new Article();
+        $article = new Article($this);
    
-        $article->slug = (new Slugify())->slugify($title);
-        $article->title = $title;
+        $article->setTitle($title);
         $article->description = $description;
         $article->body = $body;
+        $article->createdAt = new \DateTime();
+        $article->updatedAt = $article->createdAt;
         
         $article->setAuthor($author);
         
@@ -42,9 +43,13 @@ class ArticleDef extends EntityDefinition
             ->newField("body")->add()
             ->newField("createdAt")
                 ->setDbAlias("created_at")
+                ->setConvToDb([ArticleDef::class, "dateTimeToDb"])
+                ->setConvFromDb([ArticleDef::class, "dateTimeFromDb"])
                 ->add()
             ->newField("updatedAt")
                 ->setDbAlias("updated_at")
+                ->setConvToDb([ArticleDef::class, "dateTimeToDb"])
+                ->setConvFromDb([ArticleDef::class, "dateTimeFromDb"])
                 ->add()
             ->newAssociation("tags", TagDef::class)
                 ->setLinkTable("articles_tags")
@@ -61,27 +66,16 @@ class ArticleDef extends EntityDefinition
                 ->setSourceIdField("article_id")
                 ->setTargetIdField("user_id")
                 ->add();
-        
-            /*
-             "article": {
-             "slug": "how-to-train-your-dragon",
-             "title": "How to train your dragon",
-             "description": "Ever wonder how?",
-             "body": "It takes a Jacobian",
-             "tagList": ["dragons", "training"],
-             "createdAt": "2016-02-18T03:22:56.637Z",
-             "updatedAt": "2016-02-18T03:48:35.824Z",
-             "favorited": false,
-             "favoritesCount": 0,
-             "author": {
-             "username": "jake",
-             "bio": "I work at statefarm",
-             "image": "https://i.stack.imgur.com/xHWG8.jpg",
-             "following": false
-             }
-             }
-             */
-                
+    }
+    
+    public static function dateTimeToDb(\DateTime $dateTime)
+    {
+        return $dateTime->format(\DateTime::ATOM);
+    }
+    
+    public static function dateTimeFromDb(string $dateTimeStr)
+    {
+        return \DateTime::createFromFormat(\DateTime::ATOM, $dateTimeStr);
     }
 }
 

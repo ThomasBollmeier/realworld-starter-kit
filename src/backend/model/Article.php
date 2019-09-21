@@ -2,9 +2,16 @@
 namespace tbollmeier\realworld\backend\model;
 
 use tbollmeier\webappfound\db\Entity;
+use Cocur\Slugify\Slugify;
 
 class Article extends Entity
 {
+    public function setTitle(string $title)
+    {
+        $this->title = $title;
+        $this->slug = (new Slugify())->slugify($title);
+    }
+    
     public function getFavoritesCount()
     {
         return count($this->favorites);
@@ -20,9 +27,12 @@ class Article extends Entity
         if ($this->isFavoriteOf($user)) {
             return; // nothing to do
         }
-        $favorites = $this->favorites;
-        $favorites[] = $user;
-        $this->favorites = $favorites;
+        $this->associate("favorites", $user);
+    }
+    
+    public function removeFromFavoritesOf(User $user) 
+    {
+        $this->dissociate("favorites", $user);
     }
     
     public function getAuthor() 

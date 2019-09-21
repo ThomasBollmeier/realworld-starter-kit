@@ -18,6 +18,7 @@ end
 controller ArticleController
 	actions 
 		create <- post /api/articles
+		getArticles <- get /api/articles
 	end
 end
 

@@ -94,6 +94,13 @@ class Router extends BaseRouter{
         $action->paramNames = [];
         $controller->actions[] = $action;
     
+        $action = new ActionData();
+        $action->name = "getArticles";
+        $action->httpMethod = "GET";
+        $action->pattern = "api\/articles";
+        $action->paramNames = [];
+        $controller->actions[] = $action;
+    
         $routerData->controllers[] = $controller;
 
         $this->setUpHandlers($routerData);
