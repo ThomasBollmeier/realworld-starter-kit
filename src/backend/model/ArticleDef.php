@@ -16,8 +16,6 @@ class ArticleDef extends EntityDefinition
     
     public function findByAuthor(string $authorName) 
     {
-        $articles = [];
-        
         $sql =<<<SQL
 SELECT
      a.id
@@ -38,24 +36,8 @@ FROM
 WHERE
     u.name = :author_name
 SQL;
-     
-        $db = Environment::getInstance()->dbConn;
         
-        $stmt = $db->prepare($sql);
-        $stmt->execute([
-            ":author_name" => $authorName
-        ]);
-        
-        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-        while ($row) {
-            $article = $this->createEntity($row['id']);
-            $article->setRowData($row);
-            $articles[] = $article;
-            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-        }
-        $stmt->closeCursor();
-        
-        return $articles;
+        return $this->queryCustom($sql, [":author_name" => $authorName]);
     }
     
     public function createEntity($id = Entity::INDEX_NOT_IN_DB) 
