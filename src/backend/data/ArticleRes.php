@@ -22,11 +22,11 @@ class ArticleRes
         }
     }
     
-    function toJsonString() : string
+    public function articleData()
     {
         $author = $this->article->getAuthor();
         
-        return json_encode([
+        return [
             "article" => [
                 "slug" => $this->article->slug,
                 "title" => $this->article->title,
@@ -41,9 +41,14 @@ class ArticleRes
                     "bio" => $author->bio,
                     "image" => $author->imageUrl,
                     "following" => $this->following
-                ]               
+                ]
             ]
-        ]);
+        ];
+    }
+    
+    public function toJsonString() : string
+    {
+        return json_encode($this->articleData());
     }
  
 }

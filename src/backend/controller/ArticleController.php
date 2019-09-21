@@ -7,6 +7,7 @@ use tbollmeier\realworld\backend\data\ValidationError;
 use tbollmeier\realworld\backend\data\Validator;
 use tbollmeier\realworld\backend\model\Model;
 use tbollmeier\realworld\backend\data\ArticleRes;
+use tbollmeier\realworld\backend\data\ArticlesRes;
 
 class ArticleController
 {
@@ -40,7 +41,16 @@ class ArticleController
     
     public function getArticles(Request $req, Response $res)
     {
-        $this->respondJSON($res, "todo", 500);
+        $currentUser = $this->getUserFromAuthToken($req);
+        $queryParams = $req->getQueryParams();
+        
+        if (array_key_exists("author", $queryParams)) {
+            $articles = Model::getArticleDef()->findByAuthor($queryParams["author"]);
+        } else {
+            $articles = Model::getArticleDef()->findAll();
+        }
+        
+        $this->respondJSON($res, (new ArticlesRes($articles, $currentUser))->toJsonString());
     }
     
     private function validateCreateReq(Request $req) 

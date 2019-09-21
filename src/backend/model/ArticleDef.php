@@ -3,10 +3,61 @@ namespace tbollmeier\realworld\backend\model;
 
 use tbollmeier\webappfound\db\EntityDefinition;
 use tbollmeier\webappfound\db\Entity;
+use tbollmeier\webappfound\db\Environment;
 
 
 class ArticleDef extends EntityDefinition
 {
+    public function findAll() {
+        
+        return $this->query();
+        
+    }
+    
+    public function findByAuthor(string $authorName) 
+    {
+        $articles = [];
+        
+        $sql =<<<SQL
+SELECT
+     a.id
+    ,a.slug
+    ,a.title
+    ,a.description
+    ,a.body
+    ,a.created_at
+    ,a.updated_at
+FROM 
+    articles as a 
+    JOIN 
+    authors as au
+        ON a.id = au.article_id
+    JOIN 
+    users as u
+        ON u.id = au.user_id
+WHERE
+    u.name = :author_name
+SQL;
+     
+        $db = Environment::getInstance()->dbConn;
+        
+        $stmt = $db->prepare($sql);
+        $stmt->execute([
+            ":author_name" => $authorName
+        ]);
+        
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        while ($row) {
+            $article = $this->createEntity($row['id']);
+            $article->setRowData($row);
+            $articles[] = $article;
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+        $stmt->closeCursor();
+        
+        return $articles;
+    }
+    
     public function createEntity($id = Entity::INDEX_NOT_IN_DB) 
     {
         return new Article($this, $id);
@@ -70,12 +121,12 @@ class ArticleDef extends EntityDefinition
     
     public static function dateTimeToDb(\DateTime $dateTime)
     {
-        return $dateTime->format(\DateTime::ATOM);
+        return $dateTime->format("Y-m-d H:i:s");
     }
     
     public static function dateTimeFromDb(string $dateTimeStr)
     {
-        return \DateTime::createFromFormat(\DateTime::ATOM, $dateTimeStr);
+        return \DateTime::createFromFormat("Y-m-d H:i:s", $dateTimeStr);
     }
 }
 
