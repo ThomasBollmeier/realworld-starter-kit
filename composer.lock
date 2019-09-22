@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "792d4108648d2654eff0d54371927f21",
+    "content-hash": "467b33d4d5b17736b48009b9f97cc437",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -159,16 +159,16 @@
         },
         {
             "name": "tbollmeier/webappfound",
-            "version": "v2.4.5",
+            "version": "v2.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ThomasBollmeier/webappfound.git",
-                "reference": "4db938938c30d25a4d1642f358a33e785dd3ad47"
+                "reference": "084e5f8ad53215bb75d52727d08460d5198d43f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ThomasBollmeier/webappfound/zipball/4db938938c30d25a4d1642f358a33e785dd3ad47",
-                "reference": "4db938938c30d25a4d1642f358a33e785dd3ad47",
+                "url": "https://api.github.com/repos/ThomasBollmeier/webappfound/zipball/084e5f8ad53215bb75d52727d08460d5198d43f7",
+                "reference": "084e5f8ad53215bb75d52727d08460d5198d43f7",
                 "shasum": ""
             },
             "require": {
@@ -197,7 +197,7 @@
                 }
             ],
             "description": "Various helper classes for a MVC based webapp",
-            "time": "2019-09-20T07:42:26+00:00"
+            "time": "2019-09-22T19:54:35+00:00"
         }
     ],
     "packages-dev": [],

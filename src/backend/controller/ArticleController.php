@@ -32,11 +32,12 @@ class ArticleController
             $user, 
             $articleData->title, 
             $articleData->description, 
-            $articleData->body);
+            $articleData->body,
+            $articleData->tagList);
         
         $article->save();
         
-        $this->respondJSON($res, (new ArticleRes($article))->toJsonString());
+        $this->respondJSON($res, (new ArticleRes($article, $user))->toJsonString());
     }
     
     public function getArticles(Request $req, Response $res)
@@ -44,13 +45,81 @@ class ArticleController
         $currentUser = $this->getUserFromAuthToken($req);
         $queryParams = $req->getQueryParams();
         
+        $articleDef = Model::getArticleDef();
+        
         if (array_key_exists("author", $queryParams)) {
-            $articles = Model::getArticleDef()->findByAuthor($queryParams["author"]);
+            
+            $articles = $articleDef->findByAuthor($queryParams["author"]);
+            
+            if (array_key_exists("tag", $queryParams)) {
+                $articles = $articleDef->filterByTag($articles, $queryParams["tag"]);
+            }
+            
+            if (array_key_exists("favorited", $queryParams)) {
+                $articles = $articleDef->filterByFavoritedBy($articles, $queryParams["favorited"]);
+            }
+            
+        } else if (array_key_exists("tag", $queryParams)) {
+            
+            $articles = $articleDef->findByTag($queryParams["tag"]);
+            
+            if (array_key_exists("favorited", $queryParams)) {
+                $articles = $articleDef->filterByFavoritedBy($articles, $queryParams["favorited"]);
+            }
+            
+        } else if (array_key_exists("favorited", $queryParams)) {
+            
+            $articles = $articleDef->findByFavoritedBy($queryParams["favorited"]);
+            
         } else {
-            $articles = Model::getArticleDef()->findAll();
+            
+            $articles = $articleDef->findAll();
+            
         }
         
         $this->respondJSON($res, (new ArticlesRes($articles, $currentUser))->toJsonString());
+    }
+    
+    public function favorite(Request $req, Response $res)
+    {
+        $user = $this->getUserFromAuthToken($req);
+        if ($user === null) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+        
+        $slug = $req->getUrlParams()["slug"];
+        $article = Model::getArticleDef()->findBySlug($slug);
+        if ($article == null) {
+            $this->respondJSON($res, $this->makeError("article", "not found"), 404);
+            return;
+        }
+        
+        $article->addToFavoritesOf($user);
+        $article->save();
+        
+        $this->respondJSON($res, (new ArticleRes($article, $user))->toJsonString());
+    }
+    
+    public function unfavorite(Request $req, Response $res)
+    {
+        $user = $this->getUserFromAuthToken($req);
+        if ($user === null) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+        
+        $slug = $req->getUrlParams()["slug"];
+        $article = Model::getArticleDef()->findBySlug($slug);
+        if ($article == null) {
+            $this->respondJSON($res, $this->makeError("article", "not found"), 404);
+            return;
+        }
+        
+        $article->removeFromFavoritesOf($user);
+        $article->save();
+        
+        $this->respondJSON($res, (new ArticleRes($article, $user))->toJsonString());
     }
     
     private function validateCreateReq(Request $req) 

@@ -35,6 +35,30 @@ class Article extends Entity
         $this->dissociate("favorites", $user);
     }
     
+    public function setTags($tagNames)
+    {
+        $tagDef = Model::getTagDef();
+        $tags = [];
+        
+        foreach ($tagNames as $tagName) {
+            $tag = $tagDef->findByName($tagName);
+            if ($tag == null) {
+                $tag = $tagDef->createEntity();
+                $tag->name = $tagName;
+            }
+            $tags[] = $tag;
+        }
+        
+        $this->tags = $tags;
+    }
+    
+    public function getTagNames() 
+    {
+        return array_map(function($tag) {
+            return $tag->name;
+        }, $this->tags);
+    }
+    
     public function getAuthor() 
     {
         $authors = $this->authors;

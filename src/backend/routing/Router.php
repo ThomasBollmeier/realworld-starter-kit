@@ -101,6 +101,20 @@ class Router extends BaseRouter{
         $action->paramNames = [];
         $controller->actions[] = $action;
     
+        $action = new ActionData();
+        $action->name = "favorite";
+        $action->httpMethod = "POST";
+        $action->pattern = "api\/articles\/([^\/]+)\/favorite";
+        $action->paramNames = ["slug"];
+        $controller->actions[] = $action;
+    
+        $action = new ActionData();
+        $action->name = "unfavorite";
+        $action->httpMethod = "DELETE";
+        $action->pattern = "api\/articles\/([^\/]+)\/favorite";
+        $action->paramNames = ["slug"];
+        $controller->actions[] = $action;
+    
         $routerData->controllers[] = $controller;
 
         $this->setUpHandlers($routerData);

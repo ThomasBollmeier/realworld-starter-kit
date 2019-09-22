@@ -3,8 +3,6 @@ namespace tbollmeier\realworld\backend\model;
 
 use tbollmeier\webappfound\db\EntityDefinition;
 use tbollmeier\webappfound\db\Entity;
-use tbollmeier\webappfound\db\Environment;
-
 
 class ArticleDef extends EntityDefinition
 {
@@ -29,7 +27,7 @@ FROM
     articles as a 
     JOIN 
     authors as au
-        ON a.id = au.article_id
+        ON au.article_id = a.id
     JOIN 
     users as u
         ON u.id = au.user_id
@@ -38,6 +36,94 @@ WHERE
 SQL;
         
         return $this->queryCustom($sql, [":author_name" => $authorName]);
+    }
+    
+    public function findByTag(string $tagName)
+    {
+        $sql =<<<SQL
+SELECT
+     a.id
+    ,a.slug
+    ,a.title
+    ,a.description
+    ,a.body
+    ,a.created_at
+    ,a.updated_at
+FROM
+    articles as a
+    JOIN
+    articles_tags as at
+        ON at.article_id = a.id
+    JOIN
+    tags as t
+        ON t.id = at.tag_id
+WHERE
+    t.name = :tag_name
+SQL;
+        
+        return $this->queryCustom($sql, [":tag_name" => $tagName]);
+    }
+
+    public function findByFavoritedBy(string $favoritedBy)
+    {
+        $sql =<<<SQL
+SELECT
+     a.id
+    ,a.slug
+    ,a.title
+    ,a.description
+    ,a.body
+    ,a.created_at
+    ,a.updated_at
+FROM
+    articles as a
+    JOIN
+    favorites as f
+        ON f.article_id = a.id
+    JOIN
+    users as u
+        ON u.id = f.user_id
+WHERE
+    u.name = :favorited_by
+SQL;
+        
+        return $this->queryCustom($sql, [":favorited_by" => $favoritedBy]);
+    }
+    
+    public function findBySlug($slugName)
+    {
+        $articles = $this->query([
+            "filter" => "slug = :slug_name",
+            "params" => [
+                ":slug_name" => $slugName
+            ]
+        ]);
+        
+        return count($articles) == 1 ? $articles[0] : null;
+    }
+    
+    public function filterByTag($articles, $tagName)
+    {
+        return array_values(array_filter($articles, function ($article) use ($tagName) {
+            foreach ($article->tags as $tag) {
+                if (strtolower($tag->name) === strtolower($tagName)) {
+                    return true;
+                }
+            }
+            return false;
+        }));
+    }
+    
+    public function filterByFavoritedBy($articles, $favoritedBy)
+    {
+        return array_values(array_filter($articles, function ($article) use ($favoritedBy) {
+            foreach ($article->favorites as $favorite) {
+                if ($favorite->name === $favoritedBy) {
+                    return true;
+                }
+            }
+            return false;
+        }));
     }
     
     public function createEntity($id = Entity::INDEX_NOT_IN_DB) 
@@ -61,6 +147,7 @@ SQL;
         $article->updatedAt = $article->createdAt;
         
         $article->setAuthor($author);
+        $article->setTags($tagList);
         
         return $article;
     }
@@ -88,6 +175,7 @@ SQL;
                 ->setLinkTable("articles_tags")
                 ->setSourceIdField("article_id")
                 ->setTargetIdField("tag_id")
+                ->setOnDeleteCallback([$this, "onTagDeleted"])
                 ->add()
             ->newAssociation("authors", UserDef::class)
                 ->setLinkTable("authors")
@@ -109,6 +197,13 @@ SQL;
     public static function dateTimeFromDb(string $dateTimeStr)
     {
         return \DateTime::createFromFormat("Y-m-d H:i:s", $dateTimeStr);
+    }
+    
+    public function onTagDeleted(Entity $tag)
+    {
+        if (empty($tag->articles)) {
+            $tag->delete();
+        }
     }
 }
 

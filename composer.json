@@ -8,7 +8,7 @@
 		}
 	},
 	"require" : {
-		"tbollmeier/webappfound" : "2.4.5",
+		"tbollmeier/webappfound" : "2.4.6",
 		"ext-json" : "*",
 		"firebase/php-jwt" : "^5.0",
 		"cocur/slugify" : "~3.2"
