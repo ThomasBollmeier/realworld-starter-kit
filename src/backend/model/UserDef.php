@@ -6,6 +6,18 @@ use tbollmeier\webappfound\db\EntityDefinition;
 
 class UserDef extends EntityDefinition
 {
+    
+    public function createUser($email, $name, $password)
+    {
+        $user = $this->createEntity();
+        $user->email = $email;
+        $user->name = $name;
+        $user->passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $user->bio = "";
+        $user->imageUrl = null;
+        
+        return $user;
+    }
 
     public function createEntity($id = Entity::INDEX_NOT_IN_DB)
     {

@@ -95,10 +95,38 @@ class Router extends BaseRouter{
         $controller->actions[] = $action;
     
         $action = new ActionData();
+        $action->name = "update";
+        $action->httpMethod = "PUT";
+        $action->pattern = "api\/articles\/([^\/]+)";
+        $action->paramNames = ["slug"];
+        $controller->actions[] = $action;
+    
+        $action = new ActionData();
+        $action->name = "delete";
+        $action->httpMethod = "DELETE";
+        $action->pattern = "api\/articles\/([^\/]+)";
+        $action->paramNames = ["slug"];
+        $controller->actions[] = $action;
+    
+        $action = new ActionData();
         $action->name = "getArticles";
         $action->httpMethod = "GET";
         $action->pattern = "api\/articles";
         $action->paramNames = [];
+        $controller->actions[] = $action;
+    
+        $action = new ActionData();
+        $action->name = "getFeed";
+        $action->httpMethod = "GET";
+        $action->pattern = "api\/articles\/feed";
+        $action->paramNames = [];
+        $controller->actions[] = $action;
+    
+        $action = new ActionData();
+        $action->name = "getArticle";
+        $action->httpMethod = "GET";
+        $action->pattern = "api\/articles\/([^\/]+)";
+        $action->paramNames = ["slug"];
         $controller->actions[] = $action;
     
         $action = new ActionData();

@@ -188,13 +188,11 @@ class UserController
 
     private function saveNewUser($userData)
     {
-        $user = Model::getUserDef()->createEntity();
-        $user->email = $userData->email;
-        $user->name = $userData->username;
-        $user->passwordHash = password_hash($userData->password, PASSWORD_DEFAULT);
-        $user->bio = "";
-        $user->imageUrl = "";
-
+        $user = Model::getUserDef()->createUser(
+            $userData->email, 
+            $userData->username, 
+            $userData->password);
+        
         $user->save();
     }
 

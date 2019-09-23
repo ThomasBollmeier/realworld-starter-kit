@@ -8,7 +8,7 @@ class ArticleDef extends EntityDefinition
 {
     public function findAll() {
         
-        return $this->query();
+        return $this->query(["orderBy" => "updated_at DESC"]);
         
     }
     
@@ -33,6 +33,8 @@ FROM
         ON u.id = au.user_id
 WHERE
     u.name = :author_name
+ORDER BY
+    a.updated_at DESC
 SQL;
         
         return $this->queryCustom($sql, [":author_name" => $authorName]);
@@ -59,6 +61,8 @@ FROM
         ON t.id = at.tag_id
 WHERE
     t.name = :tag_name
+ORDER BY
+    a.updated_at DESC
 SQL;
         
         return $this->queryCustom($sql, [":tag_name" => $tagName]);
@@ -85,9 +89,39 @@ FROM
         ON u.id = f.user_id
 WHERE
     u.name = :favorited_by
+ORDER BY
+    a.updated_at DESC
 SQL;
         
         return $this->queryCustom($sql, [":favorited_by" => $favoritedBy]);
+    }
+    
+    public function findFeed($followerId)
+    {
+        $sql =<<<SQL
+SELECT
+     a.id
+    ,a.slug
+    ,a.title
+    ,a.description
+    ,a.body
+    ,a.created_at
+    ,a.updated_at
+FROM
+    articles as a
+    JOIN
+    authors as au
+        ON au.article_id = a.id
+    JOIN
+    followers as f
+        ON f.followed_id = au.user_id
+WHERE
+    f.follower_id = :follower_id
+ORDER BY
+    a.updated_at DESC
+SQL;
+        
+        return $this->queryCustom($sql, [":follower_id" => $followerId]);
     }
     
     public function findBySlug($slugName)

@@ -40,6 +40,76 @@ class ArticleController
         $this->respondJSON($res, (new ArticleRes($article, $user))->toJsonString());
     }
     
+    public function update(Request $req, Response $res)
+    {
+        $user = $this->getUserFromAuthToken($req);
+        if ($user === null) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+        
+        $slug = $req->getUrlParams()["slug"];
+        $article = Model::getArticleDef()->findBySlug($slug);
+        if ($article == null) {
+            $this->respondJSON($res, $this->makeError("article", "not found"), 404);
+            return;
+        }
+        
+        // Only author must change his article
+        if ($article->getAuthor()->getId() != $user->getId()) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+        
+        //TODO: validation
+        $assoc = true;
+        $articleData = json_decode($req->getBody(), $assoc)["article"];
+                
+        foreach ($articleData as $key => $value) {
+            switch ($key) {
+                case "title":
+                    $article->setTitle($value);
+                    break;
+                case "description":
+                    $article->description = $value;
+                    break;
+                case "body":
+                    $article->body = $value;
+                    break;
+            }
+        }
+        
+        $article->update();
+        
+        $this->respondJSON($res, (new ArticleRes($article, $user))->toJsonString());
+    }
+    
+    public function delete(Request $req, Response $res)
+    {
+        $user = $this->getUserFromAuthToken($req);
+        if ($user === null) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+        
+        $slug = $req->getUrlParams()["slug"];
+        $article = Model::getArticleDef()->findBySlug($slug);
+        if ($article == null) {
+            $this->respondJSON($res, $this->makeError("article", "not found"), 404);
+            return;
+        }
+        
+        // Only author can delete his own article
+        if ($article->getAuthor()->getId() != $user->getId()) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+        
+        $article->delete();
+        
+        $res->setResponseCode(204)->send();
+    }
+    
     public function getArticles(Request $req, Response $res)
     {
         $currentUser = $this->getUserFromAuthToken($req);
@@ -78,6 +148,33 @@ class ArticleController
         }
         
         $this->respondJSON($res, (new ArticlesRes($articles, $currentUser))->toJsonString());
+    }
+    
+    public function getFeed(Request $req, Response $res)
+    {
+        $user = $this->getUserFromAuthToken($req);
+        if ($user === null) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+        
+        $articles = Model::getArticleDef()->findFeed($user->getId());
+        
+        $this->respondJSON($res, (new ArticlesRes($articles, $user))->toJsonString());
+    }
+    
+    public function getArticle(Request $req, Response $res)
+    {
+        $currentUser = $this->getUserFromAuthToken($req);
+        
+        $slug = $req->getUrlParams()["slug"];
+        $article = Model::getArticleDef()->findBySlug($slug);
+        
+        if ($article != null) {
+            $this->respondJSON($res, (new ArticleRes($article, $currentUser))->toJsonString());
+        } else {
+            $this->respondJSON($res, $this->makeError("article", "not found"), 404);
+        }
     }
     
     public function favorite(Request $req, Response $res)

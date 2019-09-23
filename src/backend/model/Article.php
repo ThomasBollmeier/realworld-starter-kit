@@ -73,5 +73,11 @@ class Article extends Entity
     {
         $this->authors = [$author];
     }
+    
+    public function update() 
+    {
+        $this->updatedAt = new \DateTime();
+        $this->save();
+    }
 }
 
