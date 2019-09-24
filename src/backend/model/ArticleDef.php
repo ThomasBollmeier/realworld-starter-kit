@@ -197,13 +197,13 @@ SQL;
             ->newField("body")->add()
             ->newField("createdAt")
                 ->setDbAlias("created_at")
-                ->setConvToDb([ArticleDef::class, "dateTimeToDb"])
-                ->setConvFromDb([ArticleDef::class, "dateTimeFromDb"])
+                ->setConvToDb([DateTimeUtil::class, "dateTimeToDb"])
+                ->setConvFromDb([DateTimeUtil::class, "dateTimeFromDb"])
                 ->add()
             ->newField("updatedAt")
                 ->setDbAlias("updated_at")
-                ->setConvToDb([ArticleDef::class, "dateTimeToDb"])
-                ->setConvFromDb([ArticleDef::class, "dateTimeFromDb"])
+                ->setConvToDb([DateTimeUtil::class, "dateTimeToDb"])
+                ->setConvFromDb([DateTimeUtil::class, "dateTimeFromDb"])
                 ->add()
             ->newAssociation("tags", TagDef::class)
                 ->setLinkTable("articles_tags")
@@ -220,17 +220,14 @@ SQL;
                 ->setLinkTable("favorites")
                 ->setSourceIdField("article_id")
                 ->setTargetIdField("user_id")
+                ->add()
+            ->newAssociation("comments", CommentDef::class)
+                ->setLinkTable("article_comments")
+                ->setIsComposition()
+                ->setSourceIdField("article_id")
+                ->setTargetIdField("comment_id")
                 ->add();
-    }
-    
-    public static function dateTimeToDb(\DateTime $dateTime)
-    {
-        return $dateTime->format("Y-m-d H:i:s");
-    }
-    
-    public static function dateTimeFromDb(string $dateTimeStr)
-    {
-        return \DateTime::createFromFormat("Y-m-d H:i:s", $dateTimeStr);
+                
     }
     
     public function onTagDeleted(Entity $tag)

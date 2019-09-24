@@ -6,6 +6,7 @@ class Model
     private static $userDef = null;
     private static $articleDef = null;
     private static $tagDef = null;
+    private static $commentDef = null;
     
     public static function getUserDef() 
     {
@@ -32,6 +33,15 @@ class Model
         }
         
         return self::$tagDef;
+    }
+
+    public static function getCommentDef()
+    {
+        if (self::$commentDef == null) {
+            self::$commentDef = new CommentDef();
+        }
+        
+        return self::$commentDef;
     }
     
 }
