@@ -23,6 +23,9 @@ controller ArticleController
 		getArticles <- get /api/articles
 		getFeed <- get /api/articles/feed
 		getArticle <- get /api/articles/<slug>
+		addComment <- post /api/articles/<slug>/comments
+		getComments <- get /api/articles/<slug>/comments
+		deleteComment <- delete /api/articles/<slug>/comments/<commentId:int>
 		favorite <- post /api/articles/<slug>/favorite
 		unfavorite <- delete /api/articles/<slug>/favorite
 	end

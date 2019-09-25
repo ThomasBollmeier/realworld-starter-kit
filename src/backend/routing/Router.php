@@ -130,6 +130,27 @@ class Router extends BaseRouter{
         $controller->actions[] = $action;
     
         $action = new ActionData();
+        $action->name = "addComment";
+        $action->httpMethod = "POST";
+        $action->pattern = "api\/articles\/([^\/]+)\/comments";
+        $action->paramNames = ["slug"];
+        $controller->actions[] = $action;
+    
+        $action = new ActionData();
+        $action->name = "getComments";
+        $action->httpMethod = "GET";
+        $action->pattern = "api\/articles\/([^\/]+)\/comments";
+        $action->paramNames = ["slug"];
+        $controller->actions[] = $action;
+    
+        $action = new ActionData();
+        $action->name = "deleteComment";
+        $action->httpMethod = "DELETE";
+        $action->pattern = "api\/articles\/([^\/]+)\/comments\/(\d+)";
+        $action->paramNames = ["slug", "commentId"];
+        $controller->actions[] = $action;
+    
+        $action = new ActionData();
         $action->name = "favorite";
         $action->httpMethod = "POST";
         $action->pattern = "api\/articles\/([^\/]+)\/favorite";

@@ -74,6 +74,33 @@ class Article extends Entity
         $this->authors = [$author];
     }
     
+    public function getNextCommentNo()
+    {
+        $comments = $this->comments;
+        
+        if (empty($comments)) {
+            return 1;
+        } else {
+            $lastComment = $comments[count($comments) - 1];
+            return $lastComment->commentNo + 1;
+        }
+    }
+    
+    public function addComment(Comment $comment)
+    {
+        $this->associate("comments", $comment);
+    }
+
+    public function deleteComment(int $commentNo)
+    {
+        foreach ($this->comments as $comment) {
+            if ($comment->commentNo == $commentNo) {
+                $this->dissociate("comments", $comment);
+                break;
+            }
+        }
+    }
+    
     public function update() 
     {
         $this->updatedAt = new \DateTime();

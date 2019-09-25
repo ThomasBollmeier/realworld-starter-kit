@@ -8,6 +8,8 @@ use tbollmeier\realworld\backend\data\Validator;
 use tbollmeier\realworld\backend\model\Model;
 use tbollmeier\realworld\backend\data\ArticleRes;
 use tbollmeier\realworld\backend\data\ArticlesRes;
+use tbollmeier\realworld\backend\data\CommentRes;
+use tbollmeier\realworld\backend\data\CommentsRes;
 
 class ArticleController
 {
@@ -175,6 +177,99 @@ class ArticleController
         } else {
             $this->respondJSON($res, $this->makeError("article", "not found"), 404);
         }
+    }
+    
+    public function addComment(Request $req, Response $res)
+    {
+        $user = $this->getUserFromAuthToken($req);
+        if ($user === null) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+        
+        $slug = $req->getUrlParams()["slug"];
+        $article = Model::getArticleDef()->findBySlug($slug);
+        
+        if ($article == null) {
+            $this->respondJSON($res, $this->makeError("article", "not found"), 404);
+            return;
+        }
+        
+        list($body, $error) = $this->validateCreateCommentReq($req);
+       
+        if ($error != null) {
+            $this->respondJSON($res, $error->toJsonString(), 422);
+            return;
+        }
+        
+        $comment = Model::getCommentDef()->createComment($user, $article->getNextCommentNo(), $body);
+        $article->addComment($comment);
+        $article->save();
+        
+        $this->respondJSON($res, (new CommentRes($comment, $user))->toJsonString());
+    }
+    
+    private function validateCreateCommentReq(Request $req)
+    {
+        $data = json_decode($req->getBody());
+        
+        if ($data === null) {
+            $error = new ValidationError();
+            $error->addFieldMessage("comment", "invalid comment");
+            return [null, $error];
+        }
+        
+        $validator = new Validator(["comment"]);
+        $error = $validator->validate($data);
+        if ($error != null) {
+            return [null, $error];
+        }
+        
+        $commentData = $data->comment;
+        $validator = new Validator(["body"]);
+        $error = $validator->validate($commentData);
+        
+        return $error == null ?
+            [$commentData->body, null] :
+            [null, $error];
+    }
+    
+    public function getComments(Request $req, Response $res)
+    {
+        $currentUser = $this->getUserFromAuthToken($req);
+        
+        $slug = $req->getUrlParams()["slug"];
+        $article = Model::getArticleDef()->findBySlug($slug);
+        
+        if ($article == null) {
+            $this->respondJSON($res, $this->makeError("article", "not found"), 404);
+            return;
+        }
+        
+        $this->respondJSON($res, (new CommentsRes($article->comments, $currentUser))->toJsonString());        
+    }
+    
+    public function deleteComment(Request $req, Response $res)
+    {
+        $currentUser = $this->getUserFromAuthToken($req);
+        if ( $currentUser === null) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+        
+        $slug = $req->getUrlParams()["slug"];
+        $article = Model::getArticleDef()->findBySlug($slug);
+        
+        if ($article == null) {
+            $this->respondJSON($res, $this->makeError("article", "not found"), 404);
+            return;
+        }
+        
+        $commentId = $req->getUrlParams()["commentId"];
+        $article->deleteComment($commentId);
+        $article->save();
+        
+        $res->setResponseCode(204)->send();
     }
     
     public function favorite(Request $req, Response $res)

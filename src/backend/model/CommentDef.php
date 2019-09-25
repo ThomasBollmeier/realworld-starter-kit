@@ -11,6 +11,10 @@ class CommentDef extends EntityDefinition
         parent::__construct("comments");
         
         $this
+            ->newField("commentNo")
+                ->setDbAlias("comment_no")
+                ->setPdoType(\PDO::PARAM_INT)
+                ->add()
             ->newField("body")
                 ->add()
             ->newField("createdAt")
@@ -35,9 +39,10 @@ class CommentDef extends EntityDefinition
         return new Comment($this, $id);
     }
     
-    public function createComment(User $author, string $body)
+    public function createComment(User $author, int $commentNo, string $body)
     {
         $comment = new Comment($this);
+        $comment->commentNo = $commentNo;
         $comment->body = $body;
         $comment->createdAt = new \DateTime();
         $comment->updatedAt = $comment->createdAt;
