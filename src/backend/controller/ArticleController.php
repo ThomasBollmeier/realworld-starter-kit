@@ -266,7 +266,20 @@ class ArticleController
         }
         
         $commentId = $req->getUrlParams()["commentId"];
-        $article->deleteComment($commentId);
+        
+        $comment = $article->getComment($commentId);
+        if ($comment == null) {
+            $this->respondJSON($res, $this->makeError("comment", "not found"), 404);
+            return;
+        }
+        
+        // Only author can delete his own comment
+        if ($comment->getAuthor()->getId() != $currentUser->getId()) {
+            $this->respondJSON($res, $this->makeError("authorization", "invalid"), 401);
+            return;
+        }
+        
+        $article->deleteComment($comment);
         $article->save();
         
         $res->setResponseCode(204)->send();

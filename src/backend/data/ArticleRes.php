@@ -32,6 +32,7 @@ class ArticleRes
                 "title" => $this->article->title,
                 "description" => $this->article->description,
                 "body" => $this->article->body,
+                "tagList" => $this->article->getTagNames(),
                 "createdAt" => $this->article->createdAt->format(\DateTime::ATOM),
                 "updatedAt" => $this->article->updatedAt->format(\DateTime::ATOM),
                 "favorited" => $this->favorited,

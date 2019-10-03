@@ -31,4 +31,10 @@ controller ArticleController
 	end
 end
 
+controller TagController
+	actions
+		getTags <- get /api/tags
+	end
+end
+
 default action IndexController#notFound

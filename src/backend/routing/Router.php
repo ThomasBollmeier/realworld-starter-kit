@@ -166,6 +166,18 @@ class Router extends BaseRouter{
     
         $routerData->controllers[] = $controller;
 
+        $controller = new ControllerData();
+        $controller->name = "TagController";
+    
+        $action = new ActionData();
+        $action->name = "getTags";
+        $action->httpMethod = "GET";
+        $action->pattern = "api\/tags";
+        $action->paramNames = [];
+        $controller->actions[] = $action;
+    
+        $routerData->controllers[] = $controller;
+
         $this->setUpHandlers($routerData);
     }
 }

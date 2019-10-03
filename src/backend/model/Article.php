@@ -90,15 +90,20 @@ class Article extends Entity
     {
         $this->associate("comments", $comment);
     }
-
-    public function deleteComment(int $commentNo)
+    
+    public function getComment(int $commentNo)
     {
         foreach ($this->comments as $comment) {
             if ($comment->commentNo == $commentNo) {
-                $this->dissociate("comments", $comment);
-                break;
+                return $comment;
             }
         }
+        return null;
+    }
+
+    public function deleteComment(Comment $comment)
+    {
+        $this->dissociate("comments", $comment);
     }
     
     public function update() 
