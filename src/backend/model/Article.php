@@ -6,10 +6,52 @@ use Cocur\Slugify\Slugify;
 
 class Article extends Entity
 {
+    
+    private $articleDef;
+    
+    public function __construct(ArticleDef $articleDef, $id=self::INDEX_NOT_IN_DB)
+    {
+        parent::__construct($articleDef, $id);
+        
+        $this->articleDef = $articleDef;
+    }
+    
     public function setTitle(string $title)
     {
         $this->title = $title;
-        $this->slug = (new Slugify())->slugify($title);
+        $this->slug = $this->findUniqueSlug($title);
+    }
+    
+    private function findUniqueSlug(string $title)
+    {
+        $slug = (new Slugify())->slugify($title);
+        
+        $articles = $this->articleDef->findBySlugPattern($slug);
+        $pattern = "/".$slug."(-(\d+))?$/";
+        
+        $maxSlugNo = 0;
+        
+        foreach($articles as $article) {
+            if ($article->getId() === $this->getId()) {
+                // A unique slug exists already for this article
+                return $article->slug;
+            }
+            $matches = [];
+            if (preg_match($pattern, $article->slug, $matches)) {
+                $slugNo = array_key_exists(2, $matches) ?
+                    intval($matches[2]) : 1;
+                if ($slugNo > $maxSlugNo) {
+                    $maxSlugNo = $slugNo;
+                }
+            }
+        }
+        
+        if ($maxSlugNo > 0) {
+            $slugNo = $maxSlugNo + 1;
+            return "$slug-$slugNo";
+        } else {
+            return $slug;
+        }
     }
     
     public function getFavoritesCount()

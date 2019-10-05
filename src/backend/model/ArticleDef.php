@@ -133,7 +133,27 @@ SQL;
             ]
         ]);
         
-        return count($articles) == 1 ? $articles[0] : null;
+        return !empty($articles) ? $articles[0] : null;
+    }
+    
+    public function findBySlugPattern(string $slugName)
+    {
+        $pattern = $slugName . "%";
+        $sql =<<<SQL
+SELECT
+     id
+    ,slug
+    ,title
+    ,description
+    ,body
+    ,created_at
+    ,updated_at
+FROM
+    articles
+WHERE
+    slug LIKE :pattern
+SQL;
+        return $this->queryCustom($sql, [":pattern" => $pattern]);
     }
     
     public function filterByTag($articles, $tagName)
