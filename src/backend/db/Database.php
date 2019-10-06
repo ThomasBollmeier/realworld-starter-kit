@@ -21,5 +21,7 @@ class Database
         }
         
         Environment::getInstance()->dbConn = $dbConn;
+        
+        return $dbConn;
     }
 }
